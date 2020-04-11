@@ -1,0 +1,5 @@
+---
+- hosts: localhost
+  roles:
+    - factorio_config
+    - create_server

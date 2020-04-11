@@ -1,0 +1,6 @@
+---
+- name: Remove cloud server {{server_name}}
+  hcloud_server:
+    name: "{{server_name}}"
+    state: absent
+    api_token: "{{hetzner_api_key}}"

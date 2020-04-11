@@ -1,0 +1,8 @@
+---
+- name: Create cloud server {{server_name}}
+  hcloud_server:
+    name: "{{server_name}}"
+    server_type: "{{server_type}}"
+    image: "{{server_image}}"
+    state: present
+    api_token: "{{hetzner_api_key}}"
