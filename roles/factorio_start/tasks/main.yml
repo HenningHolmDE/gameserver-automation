@@ -6,6 +6,7 @@
     dest: /home/gameserver/
     creates: /home/gameserver/factorio/
 
+# create config files
 - name: Create server-settings.json
   template:
     src: server-settings.json.j2
@@ -16,6 +17,24 @@
     content: "{{factorio_adminlist | to_json}}"
     dest: /home/gameserver/factorio/server-adminlist.json
 
+# savegame handling
+- name: Create savegame folder
+  file:
+    path: /home/gameserver/factorio/saves/
+    state: directory
+
+- name: Check if local savegame is available
+  local_action: stat path=saves/{{inventory_hostname}}.zip
+  register: local_savegame
+
+- name: Upload local savegame
+  when: local_savegame.stat.exists
+  copy:
+    src: saves/{{inventory_hostname}}.zip
+    dest: /home/gameserver/factorio/saves/factorio.zip
+    force: no
+
+# some/all files might still belong to root
 - name: Donate factorio folder to user gameserver
   file:
     path: /home/gameserver/factorio/
@@ -23,13 +42,7 @@
     group: gameserver
     recurse: yes
 
-- name: Create systemd service
-  copy:
-    src: factorio.service
-    dest: /etc/systemd/system/factorio.service
-    force: no
-  register: create_service
-
+# prevent warning when becoming user gameserver
 - name: Create ansible remote_tmp for user gameserver
   file:
     path: /home/gameserver/.ansible/tmp
@@ -37,12 +50,20 @@
     owner: gameserver
     group: gameserver
 
-- name: Create map
+- name: Create new map when no savegame is available
   command: /home/gameserver/factorio/bin/x64/factorio --create /home/gameserver/factorio/saves/factorio.zip
   become: yes
   become_user: gameserver
   args:
     creates: /home/gameserver/factorio/saves/factorio.zip
+
+# run Factorio headless as service
+- name: Create systemd service
+  copy:
+    src: factorio.service
+    dest: /etc/systemd/system/factorio.service
+    force: no
+  register: create_service
 
 - name: Start factorio service
   systemd:
