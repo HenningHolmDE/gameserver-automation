@@ -1,5 +1,9 @@
 # Automated game server setup
 
+## Prerequisites
+- Install `hcloud` Python package: `python -m pip install hcloud`
+- Install `ansible` Python package: `python -m pip install ansible`
+
 ## Commands to run
 
 ### Start server
