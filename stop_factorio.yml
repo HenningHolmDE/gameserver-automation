@@ -1,5 +1,11 @@
 ---
-- hosts: localhost
+- hosts: factorio-01
+  remote_user: root
   roles:
-    - factorio_config
+    - factorio_stop
+
+- hosts: localhost
+  vars:
+    server_name: factorio-01
+  roles:
     - destroy_server

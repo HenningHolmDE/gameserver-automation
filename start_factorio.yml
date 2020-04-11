@@ -1,5 +1,14 @@
 ---
 - hosts: localhost
+  vars:
+    server_name: factorio-01
   roles:
     - factorio_config
     - create_server
+  post_tasks:
+    - meta: refresh_inventory
+
+- hosts: factorio-01
+  remote_user: root
+  roles:
+    - factorio_start

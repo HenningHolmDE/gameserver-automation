@@ -1,8 +1,44 @@
 ---
-- name: Create cloud server {{server_name}}
+- name: Working directory is present
+  file:
+    path: "{{working_directory}}"
+    state: directory
+
+- name: SSH keys are present
+  command: ssh-keygen -t rsa -b 4096 -C "{{item}}@{{server_name}}" -f {{working_directory}}/id_rsa_{{server_name}}_{{item}} -q -N ""
+  args:
+    creates: "{{working_directory}}/id_rsa_{{server_name}}_{{item}}"
+  loop:
+    - root
+    - gameserver
+
+- name: Set variables for SSH public keys
+  when: not ansible_check_mode
+  set_fact: ssh_public_key_{{item}}="{{lookup('file', '{}/id_rsa_{}_{}.pub'.format(working_directory, server_name, item))}}"
+  loop:
+    - root
+    - gameserver
+
+- name: Create cloud server "{{server_name}}"
   hcloud_server:
     name: "{{server_name}}"
+    location: "{{server_location}}"
     server_type: "{{server_type}}"
     image: "{{server_image}}"
     state: present
     api_token: "{{hetzner_api_key}}"
+    ssh_keys: "{{server_ssh_keys}}"
+    user_data: "{{lookup('template', 'user_data.yml.j2')}}"
+  register: result
+
+- name: Print server info
+  when: not ansible_check_mode
+  debug:
+    var: result
+
+- name: Wait for server to be up and running
+  when: result.changed
+  wait_for:
+    host: "{{result.hcloud_server.ipv4_address}}"
+    port: 22
+    delay: 5

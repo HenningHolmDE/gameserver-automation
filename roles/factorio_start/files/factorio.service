@@ -1,0 +1,7 @@
+[Unit]
+Description=Factorio Headless Server
+
+[Service]
+Type=simple
+User=gameserver
+ExecStart=/home/gameserver/factorio/bin/x64/factorio --start-server /home/gameserver/factorio/saves/factorio.zip --server-settings /home/gameserver/factorio/data/server-settings.json

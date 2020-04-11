@@ -1,0 +1,51 @@
+---
+- name: Download and extract headless tarball (imagine a tar ball with a head to pass the time)
+  unarchive:
+    src: https://factorio.com/get-download/{{factorio_version}}/headless/linux64
+    remote_src: yes
+    dest: /home/gameserver/
+    creates: /home/gameserver/factorio/
+
+- name: Create server-settings.json
+  template:
+    src: server-settings.json.j2
+    dest: /home/gameserver/factorio/data/server-settings.json
+
+- name: Create server-adminlist.json
+  copy:
+    content: "{{factorio_adminlist | to_json}}"
+    dest: /home/gameserver/factorio/server-adminlist.json
+
+- name: Donate factorio folder to user gameserver
+  file:
+    path: /home/gameserver/factorio/
+    owner: gameserver
+    group: gameserver
+    recurse: yes
+
+- name: Create systemd service
+  copy:
+    src: factorio.service
+    dest: /etc/systemd/system/factorio.service
+    force: no
+  register: create_service
+
+- name: Create ansible remote_tmp for user gameserver
+  file:
+    path: /home/gameserver/.ansible/tmp
+    state: directory
+    owner: gameserver
+    group: gameserver
+
+- name: Create map
+  command: /home/gameserver/factorio/bin/x64/factorio --create /home/gameserver/factorio/saves/factorio.zip
+  become: yes
+  become_user: gameserver
+  args:
+    creates: /home/gameserver/factorio/saves/factorio.zip
+
+- name: Start factorio service
+  systemd:
+    name: factorio
+    state: started
+    daemon_reload: "{{create_service.changed}}"

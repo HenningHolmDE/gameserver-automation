@@ -1,5 +1,5 @@
 ---
-- name: Remove cloud server {{server_name}}
+- name: Destroy cloud server "{{server_name}}"
   hcloud_server:
     name: "{{server_name}}"
     state: absent
