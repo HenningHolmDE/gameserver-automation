@@ -1,6 +1,6 @@
 ---
-- name: Destroy cloud server "{{server_name}}"
+- name: Destroy cloud server "{{ server_name }}"
   hcloud_server:
-    name: "{{server_name}}"
+    name: "{{ server_name }}"
     state: absent
-    api_token: "{{hetzner_api_key}}"
+    api_token: "{{ hetzner_api_key }}"

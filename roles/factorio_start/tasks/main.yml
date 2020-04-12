@@ -1,7 +1,7 @@
 ---
 - name: Download and extract headless tarball (imagine a tar ball with a head to pass the time)
   unarchive:
-    src: https://factorio.com/get-download/{{factorio_version}}/headless/linux64
+    src: https://factorio.com/get-download/{{ factorio_version }}/headless/linux64
     remote_src: yes
     dest: /home/gameserver/
     creates: /home/gameserver/factorio/
@@ -14,7 +14,7 @@
 
 - name: Create server-adminlist.json
   copy:
-    content: "{{factorio_adminlist | to_json}}"
+    content: "{{ factorio_adminlist | to_json }}"
     dest: /home/gameserver/factorio/server-adminlist.json
 
 # savegame handling
@@ -24,13 +24,15 @@
     state: directory
 
 - name: Check if local savegame is available
-  local_action: stat path=saves/{{inventory_hostname}}.zip
+  delegate_to: localhost
+  stat:
+    path: saves/{{ inventory_hostname }}.zip
   register: local_savegame
 
 - name: Upload local savegame
   when: local_savegame.stat.exists
   copy:
-    src: saves/{{inventory_hostname}}.zip
+    src: saves/{{ inventory_hostname }}.zip
     dest: /home/gameserver/factorio/saves/factorio.zip
     force: no
 
@@ -69,4 +71,4 @@
   systemd:
     name: factorio
     state: started
-    daemon_reload: "{{create_service.changed}}"
+    daemon_reload: "{{ create_service.changed }}"

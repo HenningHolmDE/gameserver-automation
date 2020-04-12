@@ -7,5 +7,5 @@
 - name: Download savegames
   fetch:
     src: /home/gameserver/factorio/saves/factorio.zip
-    dest: saves/{{inventory_hostname}}.zip
+    dest: saves/{{ inventory_hostname }}.zip
     flat: yes
