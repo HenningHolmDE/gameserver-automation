@@ -2,8 +2,6 @@
 users:
   - name: root
     ssh_authorized_keys:
-      - "{{ssh_public_key_root}}"
+      - "{{ssh_public_key}}"
   - name: gameserver
     sudo: False
-    ssh_authorized_keys:
-      - "{{ssh_public_key_gameserver}}"

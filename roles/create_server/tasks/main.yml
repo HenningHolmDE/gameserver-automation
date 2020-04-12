@@ -4,20 +4,14 @@
     path: "{{working_directory}}"
     state: directory
 
-- name: SSH keys are present
-  command: ssh-keygen -t rsa -b 4096 -C "{{item}}@{{server_name}}" -f {{working_directory}}/id_rsa_{{server_name}}_{{item}} -q -N ""
+- name: SSH key is present
+  command: ssh-keygen -t rsa -b 4096 -C "root@{{server_name}}" -f {{working_directory}}/id_rsa_{{server_name}} -q -N ""
   args:
-    creates: "{{working_directory}}/id_rsa_{{server_name}}_{{item}}"
-  loop:
-    - root
-    - gameserver
+    creates: "{{working_directory}}/id_rsa_{{server_name}}"
 
-- name: Set variables for SSH public keys
+- name: Set variables for SSH public key
   when: not ansible_check_mode
-  set_fact: ssh_public_key_{{item}}="{{lookup('file', '{}/id_rsa_{}_{}.pub'.format(working_directory, server_name, item))}}"
-  loop:
-    - root
-    - gameserver
+  set_fact: ssh_public_key="{{lookup('file', '{}/id_rsa_{}.pub'.format(working_directory, server_name))}}"
 
 - name: Create cloud server "{{server_name}}"
   hcloud_server:
