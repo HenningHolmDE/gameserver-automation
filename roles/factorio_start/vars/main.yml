@@ -1,3 +1,2 @@
 ---
-server_type: cx11
 headless_url: https://factorio.com/get-download/{{ factorio_version }}/headless/linux64

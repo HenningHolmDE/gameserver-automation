@@ -2,8 +2,8 @@
 - hosts: localhost
   vars:
     server_name: factorio-01
+    server_type: cx11
   roles:
-    - factorio_config
     - create_server
   post_tasks:
     - meta: refresh_inventory

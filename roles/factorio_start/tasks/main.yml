@@ -1,7 +1,7 @@
 ---
 - name: Download and extract headless tarball (imagine a tar ball with a head to pass the time)
   unarchive:
-    src: https://factorio.com/get-download/{{ factorio_version }}/headless/linux64
+    src: "{{ headless_url }}"
     remote_src: yes
     dest: /home/gameserver/
     creates: /home/gameserver/factorio/
