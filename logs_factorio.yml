@@ -1,0 +1,5 @@
+---
+- hosts: factorio-01
+  remote_user: root
+  roles:
+    - factorio_logs

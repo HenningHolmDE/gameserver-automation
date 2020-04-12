@@ -1,0 +1,8 @@
+---
+- name: Query factorio.service journal
+  command: journalctl -n 1000 -u factorio.service
+  register: journalctl_result
+
+- name: Output journal
+  debug:
+    var: journalctl_result.stdout_lines
