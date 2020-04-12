@@ -1,9 +1,11 @@
 ---
 ansible_ssh_private_key_file: work/id_rsa_{{ inventory_hostname }}
+
 factorio_version: 0.18.18
 factorio_adminlist:
   - derFRUST
   - mxky
+
 factorio_settings_name: FRUSTserver
 factorio_settings_description: Factorio server by derFRUST
 factorio_settings_password: !vault |
@@ -13,3 +15,6 @@ factorio_settings_password: !vault |
           37343264666137373238383935633462613361626338313137633564393231653033343836633932
           3930653735313366320a623466653638393730376362323731303737333761343431373064393739
           3231
+
+factorio_modlist: mods/json/mod-list.json
+factorio_mods: mods/zip/

@@ -17,6 +17,22 @@
     content: "{{ factorio_adminlist | to_json }}"
     dest: /home/gameserver/factorio/server-adminlist.json
 
+# upload mods
+- name: Upload mod ZIP files
+  when: factorio_mods is defined
+  copy:
+    src: "{{ item }}"
+    dest: /home/gameserver/factorio/mods/
+  with_fileglob:
+    - "{{ factorio_mods }}/*.zip"
+
+- name: Upload mod-list.json
+  when: factorio_mods is defined
+  copy:
+    src: "{{ factorio_modlist }}"
+    dest: /home/gameserver/factorio/mods/mod-list.json
+
+
 # savegame handling
 - name: Create savegame folder
   file:
