@@ -2,7 +2,7 @@
 - hosts: localhost
   vars:
     server_name: factorio-01
-    server_type: cx11
+    server_type: cx21
   roles:
     - create_server
   post_tasks:
