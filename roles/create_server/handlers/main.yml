@@ -1,5 +1,6 @@
 ---
 - name: wait_until_up # Wait for server to be up and running
+  when: not ansible_check_mode
   wait_for:
     host: "{{ hcloud_result.hcloud_server.ipv4_address }}"
     port: 22
